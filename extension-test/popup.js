@@ -55,6 +55,12 @@ button.addEventListener('click', function() {
    }
   });
 
+  userInput.addEventListener('keypress', function(event) {
+    if (event.key === "Enter") {
+      button.click();
+    }
+  });
+
   //Toggle button for extension
   toggle.addEventListener('click', function() {
 	chrome.storage.local.get(['toggleState'], function(data) {
