@@ -27,7 +27,13 @@ chrome.storage.local.get(["toggleState"], function(data) {
 
 button.addEventListener('click', function() {
   let site = userInput.value.trim();
-  
+	
+  try {
+    new URL(site); 
+  } catch (error) {
+    return; 
+  }
+	
   if (site) {
     chrome.storage.local.get('blacklist', function(data) {
       let blacklist = data.blacklist || [];
@@ -45,6 +51,13 @@ button.addEventListener('click', function() {
    }
 
   });
+
+userInput.addEventListener('keypress', function(event) {
+    if (event.key === "Enter") {
+      button.click();
+    }
+  });
+	
   //Toggle button for extension
   toggle.addEventListener('click', function() {
 	chrome.storage.local.get(['toggleState'], function(data) {
