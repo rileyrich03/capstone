@@ -1,23 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
-let userInput = document.getElementById('userInput');
-let button = document.getElementById('button');
-let blacklist = [];
-let blacklistUl = document.getElementById('blacklist');
-let toggle = document.getElementById('toggle');
+  let userInput = document.getElementById('userInput');
+  let button = document.getElementById('button');
+  let blacklist = [];
+  let blacklistUl = document.getElementById('blacklist');
+  let toggle = document.getElementById('toggle');
 
-chrome.storage.local.get('blacklist', function(data) {
-  if (data.blacklist) {
-    blacklist = data.blacklist;
-  }
-
-  blacklist.forEach(function(site) {
-    let li = document.createElement('li');
-
-    li.textContent = site;
-    blacklistUl.appendChild(li);
+  chrome.storage.local.get('blacklist', function(data) {
+    if (data.blacklist) {
+      blacklist = data.blacklist;
+    }
+  
+    blacklist.forEach(function(site) {
+      let li = document.createElement('li');
+  
+      li.textContent = site;
+      blacklistUl.appendChild(li);
+    });
   });
-});
-//init toggle button
+  
+  //init toggle button
 chrome.storage.local.get(["toggleState"], function(data) {
 	if (data.toggleState === 'On') {
 		toggle.innerText = 'On';
@@ -28,6 +29,12 @@ chrome.storage.local.get(["toggleState"], function(data) {
 
 button.addEventListener('click', function() {
   let site = userInput.value.trim();
+  
+  try {
+    new URL(site); 
+  } catch (error) {
+    return; 
+  }
   
   if (site) {
     chrome.storage.local.get('blacklist', function(data) {
@@ -46,8 +53,8 @@ button.addEventListener('click', function() {
       }
     });
    }
-
   });
+
   //Toggle button for extension
   toggle.addEventListener('click', function() {
 	chrome.storage.local.get(['toggleState'], function(data) {
