@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			blacklistUl.appendChild(li);
 			//add delete button
 			let deleteButton = document.createElement("button");
+			deleteButton.className = "li-button";
 			deleteButton.innerText = "delete";
 			deleteButton.addEventListener("click", function() {
 				delete blacklist[blacklist.indexOf(site)];
@@ -61,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			blacklistUl.appendChild(li);
 			//adds delete button
 			let deleteButton = document.createElement("button");
+			deleteButton.className = "li-button";
 			deleteButton.innerText = "delete";
 			deleteButton.addEventListener("click", function() {
 				delete blacklist[blacklist.indexOf(site)];
