@@ -7,13 +7,8 @@ function warningCursor() {
   
         try {
           const blacklistedURL = new URL(site).hostname;
-          if (window.location.hostname === blacklistedURL) {
-            return true;
-          }
-          else {
-            return false;
-          }          
-        } 
+          return (window.location.hostname === blacklistedURL)
+		}
         catch (error) {
           return false;
         }
@@ -60,8 +55,21 @@ function addSound() {
 		if  (!(data.blacklist && data.toggleState === 'On')) { 
 			return;	
 		}
+		const isBlacklisted = data.blacklist.some(function(site) {
+  
+			try {
+			  const blacklistedURL = new URL(site).hostname;
+			  return (window.location.hostname === blacklistedURL)
+			}
+			catch (error) {
+			  return false;
+			}
+		  
+		});
 
-
+		if (!isBlacklisted)
+			return; 
+		
 		let userInteracted = false;
 		document.addEventListener('click', function() {
 			userInteracted = true;
