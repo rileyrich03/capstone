@@ -1,25 +1,27 @@
 function warningCursor() {
   chrome.storage.local.get(['blacklist', 'toggleState'], function(data) {
-    if (data.blacklist && data.toggleState === 'On') 
-    {
+    if (!(data.blacklist && data.toggleState === 'On')) 
+	  return;
 
-      const isBlacklisted = data.blacklist.some(function(site) {
+	//prevents from running on non-blacklisted sites.
+	const isBlacklisted = data.blacklist.some(function(site) {
   
-        try {
-          const blacklistedURL = new URL(site).hostname;
-          return (window.location.hostname === blacklistedURL)
-		}
-        catch (error) {
-          return false;
-        }
-      
-      });
-      
-      if (isBlacklisted == true) {
+	  try {
+	  const blacklistedURL = new URL(site).hostname;
+	  return (window.location.hostname === blacklistedURL)
+	}
+	catch (error) {
+	  return false;
+	}
+			
+	});
+	if (!isBlacklisted)
+	  return; 
 
-        document.documentElement.style.cursor = 
-        `url('${chrome.runtime.getURL('cursor.png')}'), default`;
-      }
+    document.documentElement.style.cursor = 
+      `url('${chrome.runtime.getURL('cursor.png')}'), default`;
+  });
+}
 
 /*       
 let currentURL = (window.location.href.replace(/\/+$/, ""));
@@ -45,46 +47,52 @@ let currentURL = (window.location.href.replace(/\/+$/, ""));
 
               document.body.appendChild(hugeBlueDiv);
           } 
-  */
-
+ 
     }
   });
 }
+   */
+
 function addSound() {
-	chrome.storage.local.get(['blacklist', 'toggleState'], function(data) {
-		if  (!(data.blacklist && data.toggleState === 'On')) { 
-			return;	
-		}
-		const isBlacklisted = data.blacklist.some(function(site) {
+  chrome.storage.local.get(['blacklist', 'toggleState'], function(data) {
+    
+    if (!(data.blacklist && data.toggleState === 'On'))
+	  return;	
+	
+	//prevents from running on non-blacklisted sites.
+	const isBlacklisted = data.blacklist.some(function(site) {
   
-			try {
-			  const blacklistedURL = new URL(site).hostname;
-			  return (window.location.hostname === blacklistedURL)
-			}
-			catch (error) {
-			  return false;
-			}
-		  
-		});
+	  try {
+		const blacklistedURL = new URL(site).hostname;
+		return (window.location.hostname === blacklistedURL)
+	  }
+	  catch (error) {
+		return false;
+	  }
 
-		if (!isBlacklisted)
-			return; 
+	});	
+	if (!isBlacklisted)
+	return; 
+
 		
-		let userInteracted = false;
-		document.addEventListener('click', function() {
-			userInteracted = true;
-		});
-
-		let soundURL = chrome.runtime.getURL("thwomp.mp3")
-		console.log(soundURL);
-		var audio = new Audio(soundURL);
-		document.addEventListener('mouseover',function() {
-			if(userInteracted) {
-				var audio = new Audio(soundURL);
-				audio.play();
-			}
-		});
+	let soundURL = chrome.runtime.getURL("thwomp.mp3")
+	console.log(soundURL);
+	var audio = new Audio(soundURL);
+	let userInteracted = false;
+		
+	//enables sound to be played after user interacts with page
+	document.addEventListener('click', function() {
+	  userInteracted = true;
 	});
+
+		//plays sound when mouse moves
+	document.addEventListener('mouseover',function() {
+	  if(userInteracted) {
+	    var audio = new Audio(soundURL);
+		audio.play();
+		}
+	});
+  });
 }
 warningCursor();
 addSound();
