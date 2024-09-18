@@ -30,14 +30,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	  });
 	});
   
-	chrome.storage.local.get(["toggleState"], function(data) {
-	  if (data.toggleState === 'On') {
-		toggle.innerText = 'On';
-	  } else {
-		toggle.innerText = 'Off';
+     chrome.storage.local.get(["toggleState"], function(data) {
+      if (data.toggleState === undefined) {
+	     chrome.storage.local.set({ toggleState: 'On' }, function() 
+	     {
+	      toggle.innerText = 'On';
+	     });
+	   } 
+	  else if (data.toggleState === 'On') {
+	     toggle.innerText = 'On';
+	  } 
+	  else {
+	     toggle.innerText = 'Off';
 	  }
-	});
-  
+    });
+	
+			  
 	button.addEventListener('click', function() {
 	  let site = userInput.value.trim();
   
@@ -75,6 +83,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			  });
 			  li.appendChild(deleteButton);
   
+			chrome.tabs.query({}, function(tabs) {
+				tabs.forEach(function(tab) {
+				  const blacklistURL = new URL(site).hostname;
+		
+				  if (blacklistURL === (new URL(tab.url).hostname))
+				  {
+						chrome.tabs.reload(tab.id);
+				  }
+				});
+			 });
+
 			  userInput.value = '';
 			});
 		  } else {
@@ -91,14 +110,45 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
   
 	toggle.addEventListener('click', function() {
-	  chrome.storage.local.get(['toggleState'], function(data) {
-		let newState = data.toggleState === 'On' ? 'Off' : 'On';
-		toggle.textContent = newState;
-  
-		chrome.storage.local.set({ toggleState: newState }, function() {
-		  console.log('Extension is now ' + newState);
-		});
-	  });
-	});
+    chrome.storage.local.get(['toggleState', 'blacklist'], function(data) {
+      let newState = data.toggleState === 'On' ? 'Off' : 'On';
+      toggle.textContent = newState;
+
+      chrome.storage.local.set({ toggleState: newState }, function() {
+      console.log('Extension is now ' + newState);
+
+      chrome.storage.local.get('blacklist', function(data) {
+
+        let blacklistData = (data.blacklist || []);
+
+        if (blacklistData.length > 0) {
+          chrome.tabs.query({}, function(tabs) {
+          tabs.forEach(function(tab) {
+          blacklist.forEach(function(site) {
+        
+		  const blacklistURL = new URL(site).hostname;
+
+            if (blacklistURL === new URL(tab.url).hostname) 
+			{
+               chrome.tabs.reload(tab.id);
+            }
+
+			chrome.tabs.query({}, function(tabs) {
+				tabs.forEach(function(tab) {
+				  const blacklistURL = new URL(site).hostname;
+		
+				  if (blacklistURL === (new URL(tab.url).hostname))
+				  {
+						chrome.tabs.reload(tab.id);
+				  }
+				});
+			 });
+            });
+            });
+           });
+          }
+        });
+      });
+    });
   });
- 
+});
