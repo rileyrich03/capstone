@@ -20,7 +20,7 @@
     "default_popup": "popup.html"
   },
   "web_accessible_resources": [{
-    "resources": ["cursor.png", "thwomp.mp3"],
+    "resources": ["cursor.png", "thwomp.mp3","spam0.html", "spam1.html","spam2.html"],
     "matches": ["<all_urls>"]
   }]
 }

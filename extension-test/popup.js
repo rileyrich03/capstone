@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			  
 	button.addEventListener('click', function() {
 	  let site = userInput.value.trim();
-  
 	  if (!/^https?:\/\//i.test(site)) {
 		site = 'https://' + site;
 	  }
