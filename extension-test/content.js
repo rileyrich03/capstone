@@ -184,4 +184,7 @@ function createPopupWindow(){
 }
 warningCursor();
 addSound();
+<<<<<<< HEAD
 createPopupWindow();
+=======
+>>>>>>> dd5814128d229e7b28d1d4a5fc849a5588ff0a77
