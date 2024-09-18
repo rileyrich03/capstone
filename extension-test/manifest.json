@@ -1,23 +1,26 @@
 {
   "manifest_version": 3,
-  "name": "Extension",
-  "version": "1.2",
-  "description": "S",
+  "name": "S",
+  "version": "1.0",
   "permissions": [
     "tabs",
     "storage",
-    "activeTab"
+    "scripting"
   ],
   "background": {
     "service_worker": "backgroundTask.js"
-  },
-  "action": {
-    "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [{
+    "resources": ["cursor.png", "thwomp.mp3"],
+    "matches": ["<all_urls>"]
+  }]
 }
