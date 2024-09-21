@@ -18,35 +18,38 @@ function blacklistLoop() {
 		return; 
 	  if (!document.hasFocus())
 		return;
-	
+
 	  function warningCursor() {
 		  document.documentElement.style.cursor = 
 			`url('${chrome.runtime.getURL('cursor.png')}'), default`;
 	  }
 	  function createPopupWindow() {
-		pageSelect = Math.floor(Math.random() * 3);
-		pageURL = ("spam" + pageSelect + ".html");
-		pageURL = chrome.runtime.getURL(pageURL);
-		locationX1 = Math.floor(Math.random() * 600);
-		locationY1 = Math.floor(Math.random() * 600);
-		newwindow1=window.open(pageURL,'name0','height=250,width=200,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
-		newwindow1.moveBy(locationX1, locationY1);
-	
-		pageSelect = Math.floor(Math.random() * 3);
-		pageURL = ("spam" + pageSelect + ".html");
-		pageURL = chrome.runtime.getURL(pageURL);
-		locationX2 = Math.floor(Math.random() * 600);
-		locationY2 = Math.floor(Math.random() * 600);
-		newwindow2=window.open(pageURL,'name1','height=250,width=200,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
-		newwindow2.moveBy(locationX2, locationY2);
-		
-		pageSelect = Math.floor(Math.random() * 3);
-		pageURL = ("spam" + pageSelect + ".html");
-		pageURL = chrome.runtime.getURL(pageURL);
-		locationX3 = Math.floor(Math.random() * 600);
-		locationY3 = Math.floor(Math.random() * 600);
-		newwindow3=window.open(pageURL,'name2','height=250,width=200,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
-		newwindow3.moveBy(locationX3, locationY3);	
+		newwindow = [];
+		for (i = 0; i < 3; i++) {
+		  pageSelect = Math.floor(Math.random() * 3);
+		  pageURL = ("spam" + pageSelect + ".html");
+		  pageURL = chrome.runtime.getURL(pageURL);
+		  locationX = Math.floor(Math.random() * 600);
+		  locationY = Math.floor(Math.random() * 600);
+		  newwindow[i]=window.open(pageURL,'name' + i,'height=250,width=200,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
+		  newwindow[i].moveBy(locationX, locationY);
+		  //setTimeout(mywindow1.close, 3000);
+		}
+	  }
+	  function fakeWindow() {
+		let newDiv = document.createElement("div");
+		newDiv.style.width="100%";
+		newDiv.style.height="100%";
+		newDiv.insertAdjacentHTML("afterbegin", "spam0.html");
+		newDiv.style.backgroundColor = "blue";
+        newDiv.style.position = "fixed";
+		newDiv.style.zIndex = 99999999;
+        newDiv.style.top = "0";
+        newDiv.style.left = "0";
+		newDiv.id = "myNewDiv";
+		//const element = document.getElementById("header-nav-row");
+		//console.log(element.id);
+		document.body.appendChild(newDiv);
 	  }
 	  function addSound() {
 		let soundURL = chrome.runtime.getURL("thwomp.mp3")
@@ -69,8 +72,9 @@ function blacklistLoop() {
 	  }
 	  warningCursor();
 	  addSound();
-	  createPopupWindow();
+	  //createPopupWindow();
+	  fakeWindow();
   });
 }
-
+//always running on every tab only make loop on blacklisted tabs and check when focused
 setInterval(blacklistLoop, 5000);
