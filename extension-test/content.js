@@ -21,7 +21,7 @@ function blacklistLoop() {
 
 	  function warningCursor() {
 		  document.documentElement.style.cursor = 
-			`url('${chrome.runtime.getURL('cursor.png')}'), default`;
+			`url('${chrome.runtime.getURL("cursor.png")}'), default`;
 	  }
 	  function createPopupWindow() {
 		newwindow = [];
@@ -33,7 +33,7 @@ function blacklistLoop() {
 		  locationY = Math.floor(Math.random() * 600);
 		  newwindow[i]=window.open(pageURL,'name' + i,'height=250,width=200,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
 		  newwindow[i].moveBy(locationX, locationY);
-		  //setTimeout(mywindow1.close, 3000);
+		  
 		}
 	  }
 	  function fakeWindow() {
@@ -46,10 +46,8 @@ function blacklistLoop() {
 		newDiv.style.zIndex = 99999999;
         newDiv.style.top = "0";
         newDiv.style.left = "0";
-		newDiv.id = "myNewDiv";
-		//const element = document.getElementById("header-nav-row");
-		//console.log(element.id);
 		document.body.appendChild(newDiv);
+		setTimeout(() => {document.body.removeChild(newDiv);}, 3000);
 	  }
 	  function addSound() {
 		let soundURL = chrome.runtime.getURL("thwomp.mp3")
