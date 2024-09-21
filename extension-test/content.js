@@ -23,6 +23,7 @@ function blacklistLoop() {
 		  document.documentElement.style.cursor = 
 			`url('${chrome.runtime.getURL("cursor.png")}'), default`;
 	  }
+	  //do not use instead use fakeWindow()
 	  function createPopupWindow() {
 		newwindow = [];
 		for (i = 0; i < 3; i++) {
@@ -43,11 +44,26 @@ function blacklistLoop() {
 		newDiv.insertAdjacentHTML("afterbegin", "spam0.html");
 		newDiv.style.backgroundColor = "blue";
         newDiv.style.position = "fixed";
-		newDiv.style.zIndex = 99999999;
+		newDiv.style.zIndex = 99999998;
         newDiv.style.top = "0";
         newDiv.style.left = "0";
 		document.body.appendChild(newDiv);
 		setTimeout(() => {document.body.removeChild(newDiv);}, 3000);
+	  }
+	  function miniFakeWindows() {
+		let newDiv1 = document.createElement("div");
+		newDiv1.style.width="20%";
+		newDiv1.style.height="20%";
+		newDiv1.insertAdjacentHTML("afterbegin", "spam0.html");
+		newDiv1.style.backgroundColor = "red";
+        newDiv1.style.position = "fixed";
+		newDiv1.style.zIndex = 99999999;
+		locationX = Math.floor(Math.random() * 80);
+		locationY = Math.floor(Math.random() * 80);
+		newDiv1.style.top = locationY + "%";
+        newDiv1.style.left = locationX + "%";
+		document.body.appendChild(newDiv1);
+		setTimeout(() => {document.body.removeChild(newDiv1);}, 3000);
 	  }
 	  function addSound() {
 		let soundURL = chrome.runtime.getURL("thwomp.mp3")
@@ -57,7 +73,7 @@ function blacklistLoop() {
 		
 		//enables sound to be played after user interacts with page
 		document.addEventListener('click', function() {
-	  	userInteracted = true;
+	  	  userInteracted = true;
 		});
 
 		//plays sound when mouse moves
@@ -72,6 +88,9 @@ function blacklistLoop() {
 	  addSound();
 	  //createPopupWindow();
 	  fakeWindow();
+	  miniFakeWindows();
+	  miniFakeWindows();
+	  miniFakeWindows();
   });
 }
 //always running on every tab only make loop on blacklisted tabs and check when focused
