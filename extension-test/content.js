@@ -65,6 +65,7 @@ function blacklistLoop() {
 		document.body.appendChild(newDiv1);
 		setTimeout(() => {document.body.removeChild(newDiv1);}, 3000);
 	  }
+
 	  function addSound() {
 		let soundURL = chrome.runtime.getURL("thwomp.mp3")
 		console.log(soundURL);
@@ -87,7 +88,7 @@ function blacklistLoop() {
 	  warningCursor();
 	  addSound();
 	  //createPopupWindow();
-	  fakeWindow();
+	  //fakeWindow();
 	  miniFakeWindows();
 	  miniFakeWindows();
 	  miniFakeWindows();
