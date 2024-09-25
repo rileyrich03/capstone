@@ -54,7 +54,7 @@ function blacklistLoop() {
 			let newDiv1 = document.createElement("div");
 			newDiv1.style.width = "20%";
 			pageURL = chrome.runtime.getURL("spam0.hmtl");
-			newDiv1.innerHTML = '<object type="text/html" data ='+ pageURL +'<>/object>';
+			newDiv1.innerHTML = '<object type="text/html" data ='+ pageURL +'></object>';
 			newDiv1.style.backgroundColor = "none";
 			newDiv1.style.position = "fixed";
 			newDiv1.style.zIndex = 99999999;
