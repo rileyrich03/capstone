@@ -17,19 +17,19 @@ function isSiteBlacklisted(callback) {
 
 function warningCursor() {
 	isSiteBlacklisted(function(isBlacklisted) {
-		if (!isBlacklisted)
-      return;
+		if (isBlacklisted) {
 
-		document.documentElement.style.cursor = 
-			`url('${chrome.runtime.getURL("cursor.png")}'), default`;
+			document.documentElement.style.cursor = 
+				`url('${chrome.runtime.getURL("cursor.png")}'), default`;
 
-		let styleElement = document.createElement('style');
-		styleElement.innerHTML = `
-			* { cursor: ${`url('${chrome.runtime.getURL("cursor.png")}'), default`} !important; }
-			a, button { cursor: ${`url('${chrome.runtime.getURL("cursor.png")}'), default`} !important; }
-			input, textarea { cursor: ${`url('${chrome.runtime.getURL("cursor.png")}'), default`} !important; }
-			`;
-		document.head.appendChild(styleElement);
+			let styleElement = document.createElement('style');
+			styleElement.innerHTML = `
+				* { cursor: ${`url('${chrome.runtime.getURL("cursor.png")}'), default`} !important; }
+				a, button { cursor: ${`url('${chrome.runtime.getURL("cursor.png")}'), default`} !important; }
+				input, textarea { cursor: ${`url('${chrome.runtime.getURL("cursor.png")}'), default`} !important; }
+				`;
+			document.head.appendChild(styleElement);
+		}
 	});
 }
 
@@ -56,7 +56,7 @@ function blacklistLoop() {
 			newDiv1.innerHTML = '<object type="text/html" data='+ pageURL +' ></object>';
 			//newDiv1.insertAdjacentHTML("afterbegin", "spam0.html");
 			newDiv1.style.backgroundColor = "none";
-        	newDiv1.style.position = "fixed";
+      newDiv1.style.position = "fixed";
 			newDiv1.style.zIndex = 99999999;
 			locationX = Math.floor(Math.random() * 80);
 			locationY = Math.floor(Math.random() * 80);
@@ -89,6 +89,6 @@ function blacklistLoop() {
 		miniFakeWindows();
 	});
 }
-
 warningCursor();
+
 setInterval(blacklistLoop, 5000);
