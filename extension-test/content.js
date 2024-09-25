@@ -49,22 +49,22 @@ function blacklistLoop() {
 				newwindow[i].moveBy(locationX, locationY);
 			}
 		}
-
-		function miniFakeWindows() {
+	    function miniFakeWindows() {
 			let newDiv1 = document.createElement("div");
-			newDiv1.style.width = "20%";
-			newDiv1.style.height = "20%";
-			newDiv1.insertAdjacentHTML("afterbegin", "spam0.html");
-			newDiv1.style.backgroundColor = "red";
-			newDiv1.style.position = "fixed";
+			newDiv1.style.width="20%";
+			pageURL = chrome.runtime.getURL("spam0.html");
+			newDiv1.innerHTML = '<object type="text/html" data='+ pageURL +' ></object>';
+			//newDiv1.insertAdjacentHTML("afterbegin", "spam0.html");
+			newDiv1.style.backgroundColor = "none";
+      newDiv1.style.position = "fixed";
 			newDiv1.style.zIndex = 99999999;
 			locationX = Math.floor(Math.random() * 80);
 			locationY = Math.floor(Math.random() * 80);
 			newDiv1.style.top = locationY + "%";
 			newDiv1.style.left = locationX + "%";
 			document.body.appendChild(newDiv1);
-			setTimeout(() => {document.body.removeChild(newDiv1);}, 3000);
-		}
+			setTimeout(() => {document.body.removeChild(newDiv1);}, 6000);
+	  	}
 
 		function addSound() {
 			let soundURL = chrome.runtime.getURL("thwomp.mp3");
