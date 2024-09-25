@@ -37,33 +37,32 @@ function blacklistLoop() {
 		  
 		}
 	  }
-	  function fakeWindow() {
-		let newDiv = document.createElement("div");
-		newDiv.style.width="100%";
-		newDiv.style.height="100%";
-		newDiv.insertAdjacentHTML("afterbegin", "spam0.html");
-		newDiv.style.backgroundColor = "blue";
-        newDiv.style.position = "fixed";
-		newDiv.style.zIndex = 99999998;
-        newDiv.style.top = "0";
-        newDiv.style.left = "0";
-		document.body.appendChild(newDiv);
-		setTimeout(() => {document.body.removeChild(newDiv);}, 3000);
-	  }
 	  function miniFakeWindows() {
 		let newDiv1 = document.createElement("div");
 		newDiv1.style.width="20%";
-		newDiv1.style.height="20%";
-		newDiv1.insertAdjacentHTML("afterbegin", "spam0.html");
-		newDiv1.style.backgroundColor = "red";
+		pageURL = chrome.runtime.getURL("spam0.html");
+		newDiv1.innerHTML = '<object type="text/html" data='+ pageURL +' ></object>';
+		//newDiv1.insertAdjacentHTML("afterbegin", "spam0.html");
+		newDiv1.style.backgroundColor = "none";
         newDiv1.style.position = "fixed";
 		newDiv1.style.zIndex = 99999999;
 		locationX = Math.floor(Math.random() * 80);
 		locationY = Math.floor(Math.random() * 80);
 		newDiv1.style.top = locationY + "%";
-        newDiv1.style.left = locationX + "%";
+		newDiv1.style.left = locationX + "%";
 		document.body.appendChild(newDiv1);
-		setTimeout(() => {document.body.removeChild(newDiv1);}, 3000);
+		/*
+		topButtons = document.querySelectorAll('.title-button');
+		topButtons.forEach((button) => button.addEventListener('mouseover', function() {
+			divName = button.parentNode;
+			console.log(divName);
+			locationX = Math.floor(Math.random() * 80);
+			locationY = Math.floor(Math.random() * 80);
+			divName.style.top = locationY + "%";
+			divName.style.left = locationX + "%";
+		}))
+		*/
+		setTimeout(() => {document.body.removeChild(newDiv1);}, 6000);
 	  }
 
 	  function addSound() {
@@ -95,4 +94,4 @@ function blacklistLoop() {
   });
 }
 //always running on every tab only make loop on blacklisted tabs and check when focused
-setInterval(blacklistLoop, 5000);
+setInterval(blacklistLoop, 3000);
