@@ -51,17 +51,6 @@ function blacklistLoop() {
 		newDiv1.style.top = locationY + "%";
 		newDiv1.style.left = locationX + "%";
 		document.body.appendChild(newDiv1);
-		/*
-		topButtons = document.querySelectorAll('.title-button');
-		topButtons.forEach((button) => button.addEventListener('mouseover', function() {
-			divName = button.parentNode;
-			console.log(divName);
-			locationX = Math.floor(Math.random() * 80);
-			locationY = Math.floor(Math.random() * 80);
-			divName.style.top = locationY + "%";
-			divName.style.left = locationX + "%";
-		}))
-		*/
 		setTimeout(() => {document.body.removeChild(newDiv1);}, 6000);
 	  }
 
