@@ -1,5 +1,68 @@
 <html>
+  <head>
+	<style>
+	  header {
+      	display: flex;
+      	justify-content: space-between;
+      	align-items: center;
+		color: white;
+	  	background-color: #245DDA;
+		height: 15%;
+      }
+	  .header-text {
+		margin: 5%;
+        font-size: 12px;
+	  }
+	  body {
+  		margin: 0;
+  		padding: 0px 0px;
+  		font-family: Arial, sans-serif;
+		position: relative;
+  		width: 100%; /* Width of the popup */
+		max-height: 85%;
+		min-height: 85%;
+		overflow:hidden;
+  		position: relative;
+  		text-align: center;
+  	  }
+	  .title-button {
+		width: 18px;
+		height: 18px;
+		border: none;
+	    cursor: pointer;
+		padding: 0;
+		background:none;
+	  }
+	  .centered-text {
+		position: absolute;
+  		top: 55%;
+  		left: 50%;
+		width:100%;
+		font-size: 40px;
+		font-family:'Brush Script MT', cursive;
+		color: red;
+  		transform: translate(-50%, -50%);
+	  }
+
+	</style>
+  </head>
+  <header>
+	<h1 class="header-text">spam page 1</h1>
+	<div id = "header-buttons">
+		<button class = "title-button" id="min-button">
+		  <img src = "spam-assets/min-button.png"></img>
+		</button>
+		<button class = "title-button" id="max-button">
+		  <img src = "spam-assets/max-button.png"></img>
+		</button>
+		<button class = "title-button" id="close-button"> 
+		  <img src = "spam-assets/close-button.png"></img>
+	    </button>
+	</div>	
+  </header>
   <body>
-    <h1>THIS IS PAGE NUMBER 2!!</h1>
+	<div class = "container">
+		<img src="spam-assets/raccoon.jpg" alt ="photo of biped" height = 100% width = 100% class= ><img>
+	</div>
   </body>
 </html>

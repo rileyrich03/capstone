@@ -51,18 +51,31 @@ function blacklistLoop() {
 		}
 	    function miniFakeWindows() {
 			let newDiv1 = document.createElement("div");
-			newDiv1.style.width="20%";
-			pageURL = chrome.runtime.getURL("spam0.html");
+			newDiv1.style.width="23.75%";
+			newDiv1.style.height = "24.5%";
+			pageNum = Math.floor(Math.random() * 3);
+			pageURL = chrome.runtime.getURL("spam" + pageNum +".html");
 			newDiv1.innerHTML = '<object type="text/html" data='+ pageURL +' ></object>';
-			//newDiv1.insertAdjacentHTML("afterbegin", "spam0.html");
 			newDiv1.style.backgroundColor = "none";
-      newDiv1.style.position = "fixed";
+      		newDiv1.style.position = "fixed";
+			newDiv1.style.outlineStyle = "solid";
+			newDiv1.style.outlineWidth = "3px"
+			newDiv1.style.outlineColor = "#949494"
 			newDiv1.style.zIndex = 99999999;
 			locationX = Math.floor(Math.random() * 80);
 			locationY = Math.floor(Math.random() * 80);
 			newDiv1.style.top = locationY + "%";
 			newDiv1.style.left = locationX + "%";
 			document.body.appendChild(newDiv1);
+			/*
+			buttons = document.getElementById("header-buttons");
+			buttons.addEventListener('hover', function() {
+				locationX = Math.floor(Math.random() * 80);
+				locationY = Math.floor(Math.random() * 80);
+				newDiv1.style.top = locationY + "%";
+				newDiv1.style.left = locationX + "%";
+			});
+			*/
 			setTimeout(() => {document.body.removeChild(newDiv1);}, 6000);
 	  	}
 
