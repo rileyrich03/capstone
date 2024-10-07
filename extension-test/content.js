@@ -51,8 +51,8 @@ function blacklistLoop() {
 		}
 	    function miniFakeWindows() {
 			let newDiv1 = document.createElement("div");
-			newDiv1.style.width="23.75%";
-			newDiv1.style.height = "24.5%";
+			newDiv1.style.width="300px";
+			newDiv1.style.height = "145px";
 			pageNum = Math.floor(Math.random() * 3);
 			pageURL = chrome.runtime.getURL("spam" + pageNum +".html");
 			newDiv1.innerHTML = '<object type="text/html" data='+ pageURL +' ></object>';
