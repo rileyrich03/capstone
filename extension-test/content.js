@@ -14,7 +14,21 @@ function isSiteBlacklisted(callback) {
 		return callback(isBlacklisted);
 	});
 }
-
+function initTwoWrongs() {
+	fetch('https://api.example.url.com/data')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response error');  
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+    });
+}
 function warningCursor() {
 	isSiteBlacklisted(function(isBlacklisted) {
 		if (isBlacklisted) {
@@ -96,10 +110,45 @@ function blacklistLoop() {
 			});
 		}
 
+		/************************\
+		|                        |
+		|         DO NOT         |
+		|         ROTATE         |
+		|         WEBPAGE        |
+		|************************|
+		|************************|
+		\************************/
+		/*
+		function rotateScreen() { 
+			rotation = 0
+			const vpCenterX = window.scrollX;
+			const vpCenterY = window.scrollY;
+			const centerX = (document.documentElement.scrollWidth - window.innerWidth) / 2;
+			const centerY = (document.documentElement.scrollHeight);
+			window.scrollTo(centerX, 1000);
+			function rotate90() {
+			  rotation = (rotation % 360) + 90  
+			  document.body.style.transformOrigin = "${vpCenterX} ${vpCenterY}";
+			  document.body.style.transform = `rotate(${rotation}deg)`;
+			}
+			rotate90();
+			setTimeout(rotate90, 500);
+			setTimeout(rotate90, 1000);
+			setTimeout(rotate90, 1500);
+			window.scrollTo(vpCenterX, vpCenterY);
+		}
+		*/
+		function randomScroll() {
+		  scrollY = Math.floor(Math.random() * document.documentElement.scrollHeight);
+		  scrollX = Math.floor(Math.random() * document.documentElement.scrollWidth);
+		  window.scrollTo(scrollX, scrollY);
+		}
+
 		addSound();
 		miniFakeWindows();
 		miniFakeWindows();
 		miniFakeWindows();
+		randomScroll();
 	});
 }
 warningCursor();
