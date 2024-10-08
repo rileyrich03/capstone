@@ -13,13 +13,37 @@ document.addEventListener('DOMContentLoaded', function() {
 		blacklist.forEach(function(site) {
 			if (site != null) {
 				let li = document.createElement('li');
-
+				
 				let displayURL = site.replace(/^https?:\/\//, ''); 
 				let separateURL = document.createElement('span');
 				separateURL.textContent = displayURL;
 				separateURL.className = 'url';
 
-				li.appendChild(separateURL);
+				let itemLeft = document.createElement('div');
+				itemLeft.style.maxWidth = "73%";
+				itemLeft.style.overflow = "hidden";
+				itemLeft.style.textOverflow = "ellipsis";
+				itemLeft.appendChild(separateURL);
+				//li.appendChild(separateURL);
+
+				let slider = document.createElement('input');
+    			slider.type = 'range';
+   				slider.min = '0';
+    			slider.max = '10';
+    			slider.value = '5';
+    			slider.className = 'li-slider';
+    			
+				let output = document.createElement('span');
+				output.textContent = "5";
+				
+				slider.addEventListener('input', function() {
+        			output.textContent = slider.value;
+    			});
+
+				itemLeft.appendChild(slider);
+
+				itemLeft.appendChild(output);
+				li.appendChild(itemLeft);
 
 				let deleteButton = document.createElement('button');
 				deleteButton.innerText = 'REMOVE';
@@ -34,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				li.appendChild(deleteButton);
 
 				blacklistUl.appendChild(li);
+				
+				
 			}
 		});
 	});
