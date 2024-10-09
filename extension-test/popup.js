@@ -12,54 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		blacklist.forEach(function(site) {
 			if (site != null) {
-				let li = document.createElement('li');
-				
-				let displayURL = site.replace(/^https?:\/\//, ''); 
-				let separateURL = document.createElement('span');
-				separateURL.textContent = displayURL;
-				separateURL.className = 'url';
-
-				let itemLeft = document.createElement('div');
-				itemLeft.style.maxWidth = "73%";
-				itemLeft.style.overflow = "hidden";
-				itemLeft.style.textOverflow = "ellipsis";
-				itemLeft.appendChild(separateURL);
-				//li.appendChild(separateURL);
-
-				let slider = document.createElement('input');
-    			slider.type = 'range';
-   				slider.min = '0';
-    			slider.max = '10';
-    			slider.value = '5';
-    			slider.className = 'li-slider';
-    			
-				let output = document.createElement('span');
-				output.textContent = "5";
-				
-				slider.addEventListener('input', function() {
-        			output.textContent = slider.value;
-    			});
-
-				itemLeft.appendChild(slider);
-
-				itemLeft.appendChild(output);
-				li.appendChild(itemLeft);
-
-				let deleteButton = document.createElement('button');
-				deleteButton.innerText = 'REMOVE';
-				deleteButton.className = 'li-button';
-				deleteButton.addEventListener('click', function() {
-					blacklist = blacklist.filter(s => s !== site);
-					chrome.storage.local.set({ blacklist: blacklist }, function() {
-						console.log('Updated blacklist after deletion:', blacklist);
-					});
-					li.remove();
-				});
-				li.appendChild(deleteButton);
-
-				blacklistUl.appendChild(li);
-				
-				
+				makeli(site);
 			}
 		});
 	});
@@ -99,29 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					chrome.storage.local.set({ blacklist: blacklist }, function() {
 						console.log('Site added to blacklist:', site);
 
-						let li = document.createElement('li');
-
-						let displayURL = site.replace(/^https?:\/\//, '');
-						let separateURL = document.createElement('span');
-						separateURL.textContent = displayURL;
-						separateURL.className = 'url';
-
-						li.appendChild(separateURL);
-
-						let deleteButton = document.createElement('button');
-						deleteButton.innerText = 'REMOVE';
-						deleteButton.className = 'li-button';
-
-						deleteButton.addEventListener('click', function() {
-							blacklist = blacklist.filter(s => s !== site);
-							chrome.storage.local.set({ blacklist: blacklist }, function() {
-								console.log('Updated blacklist after deletion:', blacklist);
-							});
-							li.remove();
-						});
-						li.appendChild(deleteButton);
-
-						blacklistUl.appendChild(li);
+						makeli(site);
 
 						chrome.tabs.query({}, function(tabs) {
 							tabs.forEach(function(tab) {
@@ -173,4 +104,56 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 	});
+	function makeli(site) {
+		let li = document.createElement('li');
+				
+		let displayURL = site.replace(/^https?:\/\//, ''); 
+		let separateURL = document.createElement('span');
+		separateURL.textContent = displayURL;
+		separateURL.className = 'url';
+
+		const itemLeft = document.createElement('div');
+		itemLeft.className = 'li-left';
+		itemLeft.appendChild(separateURL);
+
+		const itemBottom = document.createElement('div');
+
+		//make slider bar
+		const slider = document.createElement('input');
+		slider.type = 'range';
+   		slider.min = '0';
+    	slider.max = '10';
+		slider.value = '5';
+    	slider.className = 'li-slider';
+		const output = document.createElement('span');
+
+		output.textContent = slider.value;
+		
+		output.style.paddingLeft = "15px";
+		output.style.fontSize = "20px";
+		
+		slider.addEventListener('input', function() {
+        	output.textContent = slider.value;
+			chrome.storage.local.set({ 'blacklist' : blacklist });
+    	});
+
+		itemBottom.appendChild(slider);
+		itemBottom.appendChild(output);
+		itemLeft.appendChild(itemBottom);
+		li.appendChild(itemLeft);
+
+		let deleteButton = document.createElement('button');
+		deleteButton.innerText = 'REMOVE';
+		deleteButton.className = 'li-button';
+		deleteButton.addEventListener('click', function() {
+			blacklist = blacklist.filter(s => s !== site);
+			chrome.storage.local.set({ blacklist: blacklist }, function() {
+				console.log('Updated blacklist after deletion:', blacklist);
+			});
+			li.remove();
+		});
+		li.appendChild(deleteButton);
+
+		blacklistUl.appendChild(li);
+	}
 });
