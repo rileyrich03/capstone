@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (data.blacklist) {
 			blacklist = data.blacklist;
 		}
-
-		blacklist.forEach(function(site) {
+		let blackmap = new Map(blacklist);
+		blackmap.forEach(function(inten, site, map) {
 			if (site != null) {
-				makeli(site);
+				console.log(typeof(site));
+				makeli(site, inten);
 			}
 		});
 	});
@@ -46,13 +47,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (site) {
 			chrome.storage.local.get('blacklist', function(data) {
 				let blacklist = data.blacklist || [];
-
-				if (!blacklist.includes(site)) {
-					blacklist.push(site);
+				//Maps cannot be stored in chrome.storage as it can only store JSON
+				//To work around this map is converted to array when stored
+				let blackmap = new Map(blacklist);
+				if (!blackmap.has(site)) {
+					blackmap.set(site, 5);
+					blacklist = Array.from(blackmap);
 					chrome.storage.local.set({ blacklist: blacklist }, function() {
 						console.log('Site added to blacklist:', site);
 
-						makeli(site);
+						makeli(site, 5);
 
 						chrome.tabs.query({}, function(tabs) {
 							tabs.forEach(function(tab) {
@@ -104,9 +108,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 	});
-	function makeli(site) {
+	function makeli(site, inten) {
+		//grab blacklist for intensity editing and deleting 
+		let blackmap;
+		chrome.storage.local.get('blacklist', function(data) {
+			blackmap = new Map(data.blacklist);
+		});
+
 		let li = document.createElement('li');
-				
+		
 		let displayURL = site.replace(/^https?:\/\//, ''); 
 		let separateURL = document.createElement('span');
 		separateURL.textContent = displayURL;
@@ -123,8 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		slider.type = 'range';
    		slider.min = '0';
     	slider.max = '10';
-		slider.value = '5';
+		slider.value = inten;
     	slider.className = 'li-slider';
+		
+		
 		const output = document.createElement('span');
 
 		output.textContent = slider.value;
@@ -134,7 +146,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		slider.addEventListener('input', function() {
         	output.textContent = slider.value;
-			chrome.storage.local.set({ 'blacklist' : blacklist });
+			blackmap.set(site, slider.value);
+			console.log(site + " has been changed to: " + slider.value);
+			chrome.storage.local.set({ 'blacklist' : Array.from(blackmap)});
     	});
 
 		itemBottom.appendChild(slider);
@@ -146,7 +160,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		deleteButton.innerText = 'REMOVE';
 		deleteButton.className = 'li-button';
 		deleteButton.addEventListener('click', function() {
-			blacklist = blacklist.filter(s => s !== site);
+			blackmap.delete(site);
+			blacklist = Array.from(blackmap);
 			chrome.storage.local.set({ blacklist: blacklist }, function() {
 				console.log('Updated blacklist after deletion:', blacklist);
 			});
