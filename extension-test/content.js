@@ -14,6 +14,19 @@ function isSiteBlacklisted(callback) {
 		return callback(isBlacklisted);
 	});
 }
+
+function getIntensity(callback) {
+	
+	//get intensity from blacklist
+	let site = 'https://' + window.location.hostname + "/";
+	let blackmap;
+	chrome.storage.local.get('blacklist', function(data) {
+		blackmap = new Map(data.blacklist);
+		intensity = blackmap.get(site);
+		return callback(intensity);
+
+	});
+}
 function initTwoWrongs() {
 	fetch('https://api.example.url.com/data')
     .then(response => {
@@ -49,8 +62,9 @@ function warningCursor() {
 
 function blacklistLoop() {
 	isSiteBlacklisted(function(isBlacklisted) {
+	getIntensity(function(intensity){
 		if (!isBlacklisted || !document.hasFocus()) return;
-
+		
 		function createPopupWindow() {
 			newwindow = [];
 			for (i = 0; i < 3; i++) {
@@ -144,13 +158,14 @@ function blacklistLoop() {
 		  window.scrollTo(scrollX, scrollY);
 		}
 
+		console.log("Intensity of current site: " + intensity);
 		addSound();
-		miniFakeWindows();
-		miniFakeWindows();
-		miniFakeWindows();
+		for(let i = 0; i < intensity; i += 3)
+			miniFakeWindows();
 		randomScroll();
+
+	});
 	});
 }
 warningCursor();
-
 setInterval(blacklistLoop, 5000);
