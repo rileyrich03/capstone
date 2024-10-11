@@ -9,31 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (data.blacklist) {
 			blacklist = data.blacklist;
 		}
-
-		blacklist.forEach(function(site) {
+		let blackmap = new Map(blacklist);
+		blackmap.forEach(function(inten, site, map) {
 			if (site != null) {
-				let li = document.createElement('li');
-
-				let displayURL = site.replace(/^https?:\/\//, ''); 
-				let separateURL = document.createElement('span');
-				separateURL.textContent = displayURL;
-				separateURL.className = 'url';
-
-				li.appendChild(separateURL);
-
-				let deleteButton = document.createElement('button');
-				deleteButton.innerText = 'REMOVE';
-				deleteButton.className = 'li-button';
-				deleteButton.addEventListener('click', function() {
-					blacklist = blacklist.filter(s => s !== site);
-					chrome.storage.local.set({ blacklist: blacklist }, function() {
-						console.log('Updated blacklist after deletion:', blacklist);
-					});
-					li.remove();
-				});
-				li.appendChild(deleteButton);
-
-				blacklistUl.appendChild(li);
+				console.log(typeof(site));
+				makeli(site, inten);
 			}
 		});
 	});
@@ -67,35 +47,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (site) {
 			chrome.storage.local.get('blacklist', function(data) {
 				let blacklist = data.blacklist || [];
-
-				if (!blacklist.includes(site)) {
-					blacklist.push(site);
+				//Maps cannot be stored in chrome.storage as it can only store JSON
+				//To work around this map is converted to array when stored
+				let blackmap = new Map(blacklist);
+				if (!blackmap.has(site)) {
+					blackmap.set(site, 5);
+					blacklist = Array.from(blackmap);
 					chrome.storage.local.set({ blacklist: blacklist }, function() {
 						console.log('Site added to blacklist:', site);
 
-						let li = document.createElement('li');
-
-						let displayURL = site.replace(/^https?:\/\//, '');
-						let separateURL = document.createElement('span');
-						separateURL.textContent = displayURL;
-						separateURL.className = 'url';
-
-						li.appendChild(separateURL);
-
-						let deleteButton = document.createElement('button');
-						deleteButton.innerText = 'REMOVE';
-						deleteButton.className = 'li-button';
-
-						deleteButton.addEventListener('click', function() {
-							blacklist = blacklist.filter(s => s !== site);
-							chrome.storage.local.set({ blacklist: blacklist }, function() {
-								console.log('Updated blacklist after deletion:', blacklist);
-							});
-							li.remove();
-						});
-						li.appendChild(deleteButton);
-
-						blacklistUl.appendChild(li);
+						makeli(site, 5);
 
 						chrome.tabs.query({}, function(tabs) {
 							tabs.forEach(function(tab) {
@@ -147,4 +108,67 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 	});
+	function makeli(site, inten) {
+		//grab blacklist for intensity editing and deleting 
+		let blackmap;
+		chrome.storage.local.get('blacklist', function(data) {
+			blackmap = new Map(data.blacklist);
+		});
+
+		let li = document.createElement('li');
+		
+		let displayURL = site.replace(/^https?:\/\//, ''); 
+		let separateURL = document.createElement('span');
+		separateURL.textContent = displayURL;
+		separateURL.className = 'url';
+
+		const itemLeft = document.createElement('div');
+		itemLeft.className = 'li-left';
+		itemLeft.appendChild(separateURL);
+
+		const itemBottom = document.createElement('div');
+
+		//make slider bar
+		const slider = document.createElement('input');
+		slider.type = 'range';
+   		slider.min = '0';
+    	slider.max = '10';
+		slider.value = inten;
+    	slider.className = 'li-slider';
+		
+		
+		const output = document.createElement('span');
+
+		output.textContent = slider.value;
+		
+		output.style.paddingLeft = "15px";
+		output.style.fontSize = "20px";
+		
+		slider.addEventListener('input', function() {
+        	output.textContent = slider.value;
+			blackmap.set(site, slider.value);
+			console.log(site + " has been changed to: " + slider.value);
+			chrome.storage.local.set({ 'blacklist' : Array.from(blackmap)});
+    	});
+
+		itemBottom.appendChild(slider);
+		itemBottom.appendChild(output);
+		itemLeft.appendChild(itemBottom);
+		li.appendChild(itemLeft);
+
+		let deleteButton = document.createElement('button');
+		deleteButton.innerText = 'REMOVE';
+		deleteButton.className = 'li-button';
+		deleteButton.addEventListener('click', function() {
+			blackmap.delete(site);
+			blacklist = Array.from(blackmap);
+			chrome.storage.local.set({ blacklist: blacklist }, function() {
+				console.log('Updated blacklist after deletion:', blacklist);
+			});
+			li.remove();
+		});
+		li.appendChild(deleteButton);
+
+		blacklistUl.appendChild(li);
+	}
 });
