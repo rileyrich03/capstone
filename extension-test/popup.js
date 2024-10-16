@@ -43,7 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			console.error('Invalid URL:', site);
 			return;
 		}
-
+		site = new URL(site).hostname;
+		site = 'https://' + site + '/';
 		if (site) {
 			chrome.storage.local.get('blacklist', function(data) {
 				let blacklist = data.blacklist || [];
@@ -117,7 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		let li = document.createElement('li');
 		
-		let displayURL = site.replace(/^https?:\/\//, ''); 
+		//let displayURL = new URL(site).hostname;
+		//displayURL = displayURL.replace(/^https?:\/\//, ''); 
+		let displayURL = site;
 		let separateURL = document.createElement('span');
 		separateURL.textContent = displayURL;
 		separateURL.className = 'url';
