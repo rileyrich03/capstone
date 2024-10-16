@@ -118,9 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		let li = document.createElement('li');
 		
-		//let displayURL = new URL(site).hostname;
-		//displayURL = displayURL.replace(/^https?:\/\//, ''); 
 		let displayURL = site;
+		displayURL = displayURL.replace(/^https?:\/\//, ''); 
+		displayURL = displayURL.replace(/\//, ''); 
 		let separateURL = document.createElement('span');
 		separateURL.textContent = displayURL;
 		separateURL.className = 'url';
