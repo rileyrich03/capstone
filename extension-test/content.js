@@ -16,7 +16,6 @@ function isSiteBlacklisted(callback) {
 }
 
 function getIntensity(callback) {
-	
 	//get intensity from blacklist
 	let site = 'https://' + window.location.hostname + "/";
 	let blackmap;
@@ -27,6 +26,7 @@ function getIntensity(callback) {
 
 	});
 }
+
 function initTwoWrongs() {
 	fetch('https://api.example.url.com/data')
     .then(response => {
@@ -42,6 +42,7 @@ function initTwoWrongs() {
         console.error('Fetch error:', error);
     });
 }
+
 function warningCursor() {
 	isSiteBlacklisted(function(isBlacklisted) {
 		if (isBlacklisted) {
@@ -152,6 +153,18 @@ function blacklistLoop() {
 			window.scrollTo(vpCenterX, vpCenterY);
 		}
 		*/
+
+		function randomZoom(){
+			let zoomXY = Math.random() * (1.50 - 0.30) + 0.30; 
+			document.body.style.zoom = zoomXY;
+			document.body.style.transform = `scale(${zoomXY})`;
+			document.body.style.transformOrigin = 'center center'; 
+
+			setTimeout(() => {
+				document.body.style.zoom = 1;
+				document.body.style.transform = `scale(1)`;}, 4500);
+		}
+
 		function randomScroll() {
 		  scrollY = Math.floor(Math.random() * document.documentElement.scrollHeight);
 		  scrollX = Math.floor(Math.random() * document.documentElement.scrollWidth);
@@ -163,7 +176,7 @@ function blacklistLoop() {
 		for(let i = 0; i < intensity; i += 3)
 			miniFakeWindows();
 		randomScroll();
-
+		randomZoom();
 	});
 	});
 }
