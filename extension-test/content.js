@@ -60,6 +60,38 @@ function warningCursor() {
 	});
 }
 
+function bfd() {
+	isSiteBlacklisted(function(isBlacklisted) {
+		if (!isBlacklisted)
+			return;
+		const bfd = document.createElement('div');
+    
+    	// Apply styles to cover the whole screen
+    	bfd.style.position = 'fixed';
+    	bfd.style.top = '0';
+    	bfd.style.left = '0';
+    	bfd.style.width = '100vw';
+    	bfd.style.height = '100vh';
+    	bfd.style.backgroundColor = 'red';
+    	bfd.style.zIndex = '99999999';
+		
+		const removeButton = document.createElement('button');
+		removeButton.style.height = '50vh';
+		removeButton.style.width = '50vw';
+		removeButton.style.top = '25%';
+		removeButton.style.left = '25%';
+		removeButton.innerText = "Enter Distracting Website.";
+		removeButton.style.position = 'absolute';
+		removeButton.style.cursor = 'pointer';
+
+		removeButton.addEventListener('click', function() {
+			document.body.removeChild(bfd);
+		});
+		bfd.appendChild(removeButton);
+    	
+    	document.body.appendChild(bfd);
+	});
+}
 function blacklistLoop() {
 	isSiteBlacklisted(function(isBlacklisted) {
 	getIntensity(function(intensity){
@@ -89,7 +121,7 @@ function blacklistLoop() {
 			newDiv1.style.outlineStyle = "solid";
 			newDiv1.style.outlineWidth = "3px"
 			newDiv1.style.outlineColor = "#949494"
-			newDiv1.style.zIndex = 99999999;
+			newDiv1.style.zIndex = 99999998;
 			locationX = Math.floor(Math.random() * 80);
 			locationY = Math.floor(Math.random() * 80);
 			newDiv1.style.top = locationY + "%";
@@ -168,4 +200,5 @@ function blacklistLoop() {
 	});
 }
 warningCursor();
+bfd();
 setInterval(blacklistLoop, 5000);
