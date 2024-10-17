@@ -85,6 +85,7 @@ function bfd() {
 
 		removeButton.addEventListener('click', function() {
 			document.body.removeChild(bfd);
+			setInterval(blacklistLoop, 5000);
 		});
 		bfd.appendChild(removeButton);
     	
@@ -149,4 +150,4 @@ function blacklistLoop() {
 
 warningCursor();
 bfd();
-setInterval(blacklistLoop, 5000);
+//moved blacklist loop timeout to bfd button click
