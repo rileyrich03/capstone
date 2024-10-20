@@ -143,12 +143,21 @@ document.addEventListener('DOMContentLoaded', function() {
 		const output = document.createElement('span');
 
 		output.textContent = slider.value;
+		const colors = ["#FFFFFF", "#33ff00" , "#66ff00" , "#99ff00", "#ccff00", 
+			            "#FFFF00", "#FFCC00", "#ff9900", "#ff6600", "#FF3300" , "#FF0000"];
+		output.style.color = colors[slider.value];
+		const size = (15 + parseInt(slider.value)) + "px";
+		output.style.fontSize = size;
+
+
 		
 		output.style.paddingLeft = "15px";
-		output.style.fontSize = "20px";
 		
 		slider.addEventListener('input', function() {
         	output.textContent = slider.value;
+			output.style.color = colors[slider.value];
+			const size = (15 + parseInt(slider.value)) + "px";
+			output.style.fontSize = size;
 			blackmap.set(site, slider.value);
 			console.log(site + " has been changed to: " + slider.value);
 			chrome.storage.local.set({ 'blacklist' : Array.from(blackmap)});
