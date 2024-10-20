@@ -130,7 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		itemLeft.appendChild(separateURL);
 
 		const itemBottom = document.createElement('div');
-
+		itemBottom.className = 'item-bottom';
+		
 		//make slider bar
 		const slider = document.createElement('input');
 		slider.type = 'range';
@@ -139,13 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		slider.value = inten;
     	slider.className = 'li-slider';
 		
-		
 		const output = document.createElement('span');
 
 		output.textContent = slider.value;
-		
-		output.style.paddingLeft = "15px";
-		output.style.fontSize = "20px";
+		output.className = 'slider-output';
 		
 		slider.addEventListener('input', function() {
         	output.textContent = slider.value;
