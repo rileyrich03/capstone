@@ -130,7 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		itemLeft.appendChild(separateURL);
 
 		const itemBottom = document.createElement('div');
-
+		itemBottom.className = 'item-bottom';
+		
 		//make slider bar
 		const slider = document.createElement('input');
 		slider.type = 'range';
@@ -139,12 +140,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		slider.value = inten;
     	slider.className = 'li-slider';
 		
-		
 		const output = document.createElement('span');
 
 		output.textContent = slider.value;
 		const colors = ["#FFFFFF", "#33ff00" , "#66ff00" , "#99ff00", "#ccff00", 
-			            "#FFFF00", "#FFCC00", "#ff9900", "#ff6600", "#FF3300" , "#FF0000"];
+			              "#FFFF00", "#FFCC00", "#ff9900", "#ff6600", "#FF3300" , "#FF0000"];
 		output.style.color = colors[slider.value];
 		const size = (15 + parseInt(slider.value)) + "px";
 		output.style.fontSize = size;
@@ -152,15 +152,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		
 		output.style.paddingLeft = "15px";
+
 		
 		slider.addEventListener('input', function() {
         	output.textContent = slider.value;
-			output.style.color = colors[slider.value];
-			const size = (15 + parseInt(slider.value)) + "px";
-			output.style.fontSize = size;
-			blackmap.set(site, slider.value);
-			console.log(site + " has been changed to: " + slider.value);
-			chrome.storage.local.set({ 'blacklist' : Array.from(blackmap)});
+			    output.style.color = colors[slider.value];
+			    const size = (15 + parseInt(slider.value)) + "px";
+			    output.style.fontSize = size;
+			    blackmap.set(site, slider.value);
+			    console.log(site + " has been changed to: " + slider.value);
+			    chrome.storage.local.set({ 'blacklist' : Array.from(blackmap)});
     	});
 
 		itemBottom.appendChild(slider);
