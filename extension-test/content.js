@@ -116,17 +116,19 @@ function blacklistLoop() {
             function addSound() {
                 let soundURL = chrome.runtime.getURL("thwomp.mp3");
                 let audio = new Audio(soundURL);
-                let userInteracted = false;
+
+				function soundChance() {
+					randomNumb = (Math.random() * 10)
+					if (randomNumb <= ((intensity) ** 3)/100) {
+                       	audio.play();
+					}
+				}
+				//remove event listeners for refresh
+				document.removeEventListener('mouseover', soundChance);
+				document.addEventListener('mouseover', soundChance);
 
                 document.addEventListener('click', function () {
-                    userInteracted = true;
-                });
-
-                document.addEventListener('mouseover', function () {
-                    if (userInteracted) {
-                        let audio = new Audio(soundURL);
-                        audio.play();
-                    }
+                    audio.play();
                 });
             }
 
