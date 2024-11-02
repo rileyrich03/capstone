@@ -109,6 +109,27 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 	});
+
+	document.getElementById('currentTabButton').addEventListener('click', function () {
+		chrome.tabs.query({active: true, currentWindow: true}, 
+			
+		function (tabs) {
+		  const currentTabURL = new URL(tabs[0].url).hostname;
+		  document.getElementById('userInput').value = currentTabURL;
+		});
+	  });	
+
+    document.getElementById('currentTabButton').addEventListener('click', function () {
+        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+			const currentTabURL = tabs[0].url;
+
+			if (currentTabURL && currentTabURL.startsWith('http')) {
+			  const currentURL = new URL(currentTabURL);
+			  document.getElementById('userInput').value = currentURL.hostname;
+			} 
+        });
+    });
+
 	function makeli(site, inten) {
 		//grab blacklist for intensity editing and deleting 
 		let blackmap;
