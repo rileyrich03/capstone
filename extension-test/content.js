@@ -54,9 +54,18 @@ function randomZoom() {
 }
 
 function randomScroll() {
-    let scrollY = Math.floor(Math.random() * document.documentElement.scrollHeight);
-    let scrollX = Math.floor(Math.random() * document.documentElement.scrollWidth);
-    window.scrollTo(scrollX, scrollY);
+	getIntensity(function(intensity) {
+		if (intensity = 0)
+			return;
+		const currX = window.screenX;
+		const currY = window.screenY;
+		const maxScrollH = (document.documentElement.scrollHeight) / (11 - intensity);
+		const maxScrollW = (document.documentElement.scrollWidth) / (11 - intensity);
+    	let scrollY = currX + Math.floor(Math.random() * 2 * (maxScrollH));
+    	let scrollX = currY + Math.floor(Math.random() * 2 * (maxScrollW)); 
+		console.log("scrolling to " + (scrollX-currX) + ", " + (scrollY-currY))
+    	window.scrollTo(scrollX, scrollY);
+	});
 }
 
 function bfd() {
