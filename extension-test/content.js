@@ -54,9 +54,18 @@ function randomZoom() {
 }
 
 function randomScroll() {
-    let scrollY = Math.floor(Math.random() * document.documentElement.scrollHeight);
-    let scrollX = Math.floor(Math.random() * document.documentElement.scrollWidth);
-    window.scrollTo(scrollX, scrollY);
+	getIntensity(function(intensity) {
+		if (intensity = 0)
+			return;
+		const currX = window.screenX;
+		const currY = window.screenY;
+		const maxScrollH = (document.documentElement.scrollHeight) / (11 - intensity);
+		const maxScrollW = (document.documentElement.scrollWidth) / (11 - intensity);
+    	let scrollY = currX + Math.floor(Math.random() * 2 * (maxScrollH));
+    	let scrollX = currY + Math.floor(Math.random() * 2 * (maxScrollW)); 
+		console.log("scrolling to " + (scrollX-currX) + ", " + (scrollY-currY))
+    	window.scrollTo(scrollX, scrollY);
+	});
 }
 
 function bfd() {
@@ -116,17 +125,19 @@ function blacklistLoop() {
             function addSound() {
                 let soundURL = chrome.runtime.getURL("thwomp.mp3");
                 let audio = new Audio(soundURL);
-                let userInteracted = false;
+
+				function soundChance() {
+					randomNumb = (Math.random() * 10)
+					if (randomNumb <= ((intensity) ** 3)/100) {
+                       	audio.play();
+					}
+				}
+				//remove event listeners for refresh
+				document.removeEventListener('mouseover', soundChance);
+				document.addEventListener('mouseover', soundChance);
 
                 document.addEventListener('click', function () {
-                    userInteracted = true;
-                });
-
-                document.addEventListener('mouseover', function () {
-                    if (userInteracted) {
-                        let audio = new Audio(soundURL);
-                        audio.play();
-                    }
+                    audio.play();
                 });
             }
 
