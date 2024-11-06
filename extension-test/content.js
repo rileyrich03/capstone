@@ -68,13 +68,26 @@ function randomScroll() {
 	});
 }
 
+function pauseVideo() {
+    const videos = document.querySelectorAll('video');
+
+    videos.forEach(video => {
+        video.pause();
+    });
+
+    setInterval(() => {
+        videos.forEach(video => {
+            video.pause();
+    });
+    }, 11000);
+}
+
 function bfd() {
 	isSiteBlacklisted(function(isBlacklisted) {
 		if (!isBlacklisted)
 			return;
 		const bfd = document.createElement('div');
     
-    	// Apply styles to cover the whole screen
     	bfd.style.position = 'fixed';
     	bfd.style.top = '0';
     	bfd.style.left = '0';
@@ -161,4 +174,4 @@ function blacklistLoop() {
 
 warningCursor();
 bfd();
-//moved blacklist loop timeout to bfd button click
+pauseVideo();
