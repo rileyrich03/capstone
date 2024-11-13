@@ -163,7 +163,6 @@ function blacklistLoop() {
             for (let i = 0; i < intensity; i += 3) {
                 miniFakeWindows();
             }
-			/*
             if (Math.random() > 0.5) {
                 setTimeout(randomZoom, 0); 
                 setTimeout(randomScroll, 1000);
@@ -171,7 +170,6 @@ function blacklistLoop() {
                 setTimeout(randomScroll, 0);
                 setTimeout(randomZoom, 1000);
             }
-			*/
         });
     });
 }
