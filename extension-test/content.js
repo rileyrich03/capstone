@@ -107,6 +107,7 @@ function bfd() {
 
 		removeButton.addEventListener('click', function() {
 			document.body.removeChild(bfd);
+			blacklistLoop()
 			setInterval(blacklistLoop, 5000);
 		});
 		bfd.appendChild(removeButton);
