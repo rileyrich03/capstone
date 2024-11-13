@@ -194,11 +194,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		deleteButton.innerText = 'REMOVE';
 		deleteButton.className = 'li-button';
 		deleteButton.addEventListener('click', function() {
-			blackmap.delete(site);
-			blacklist = Array.from(blackmap);
-			chrome.storage.local.set({ blacklist: blacklist }, function() {
-				console.log('Updated blacklist after deletion:', blacklist);
+			chrome.storage.local.get('blacklist', function(data) {
+				blackmap2 = new Map(data.blacklist);
+				blackmap2.delete(site);
+				blacklist = Array.from(blackmap2);
+				chrome.storage.local.set({ blacklist: blacklist }, function() {
+					console.log('Updated blacklist after deletion:', blacklist);
+				});
 			});
+			//blackmap2.delete(site);
+			//blacklist = Array.from(blackmap2);
+			//chrome.storage.local.set({ blacklist: blacklist }, function() {
+			//	console.log('Updated blacklist after deletion:', blacklist);
+			//});
 			li.remove();
 		});
 		li.appendChild(deleteButton);
