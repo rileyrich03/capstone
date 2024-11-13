@@ -25,7 +25,8 @@
     "default_icon": "icon128.png"
   },
   "web_accessible_resources": [{
-    "resources": ["cursor.png", "thwomp.mp3","spam0.html", "spam1.html","spam2.html"],
+    "resources": ["cursor.png", "thwomp.mp3","spam0.html", "spam1.html","spam2.html", "spam3.html", "spam4.html", "spam5.html",
+                  "spam6.html"],
     "matches": ["<all_urls>"]
   }]
 }

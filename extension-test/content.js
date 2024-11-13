@@ -124,8 +124,10 @@ function blacklistLoop() {
                 let newDiv1 = document.createElement("div");
                 newDiv1.style.width = "300px";
                 newDiv1.style.height = "145px";
-                let pageNum = Math.floor(Math.random() * 3);
-                let pageURL = chrome.runtime.getURL(`spam${pageNum}.html`);
+                let pageNum = Math.floor(Math.random() * 7);
+				console.log("PageNum: " + pageNum)
+				let pageURL = chrome.runtime.getURL(`spam${pageNum}.html`);
+				console.log("Page: " + pageURL)
                 newDiv1.innerHTML = `<object type="text/html" data='${pageURL}'></object>`;
                 newDiv1.style.position = "fixed";
                 newDiv1.style.outline = "solid 3px #949494";
@@ -161,7 +163,7 @@ function blacklistLoop() {
             for (let i = 0; i < intensity; i += 3) {
                 miniFakeWindows();
             }
-
+			/*
             if (Math.random() > 0.5) {
                 setTimeout(randomZoom, 0); 
                 setTimeout(randomScroll, 1000);
@@ -169,6 +171,7 @@ function blacklistLoop() {
                 setTimeout(randomScroll, 0);
                 setTimeout(randomZoom, 1000);
             }
+			*/
         });
     });
 }
