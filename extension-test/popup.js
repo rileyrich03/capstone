@@ -202,11 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					console.log('Updated blacklist after deletion:', blacklist);
 				});
 			});
-			//blackmap2.delete(site);
-			//blacklist = Array.from(blackmap2);
-			//chrome.storage.local.set({ blacklist: blacklist }, function() {
-			//	console.log('Updated blacklist after deletion:', blacklist);
-			//});
 			li.remove();
 		});
 		li.appendChild(deleteButton);
