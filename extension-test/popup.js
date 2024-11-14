@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	button.addEventListener('click', function() {
 		let site = userInput.value.trim();
-
+	
 		if (!/^https?:\/\//i.test(site)) {
 			site = 'https://' + site;
 		}
-
+	
 		try {
 			new URL(site);
 		} catch (error) {
@@ -48,27 +48,36 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (site) {
 			chrome.storage.local.get('blacklist', function(data) {
 				let blacklist = data.blacklist || [];
-				//Maps cannot be stored in chrome.storage as it can only store JSON
-				//To work around this map is converted to array when stored
 				let blackmap = new Map(blacklist);
 				if (!blackmap.has(site)) {
 					blackmap.set(site, 5);
+					
 					blacklist = Array.from(blackmap);
 					chrome.storage.local.set({ blacklist: blacklist }, function() {
 						console.log('Site added to blacklist:', site);
-
+	
 						makeli(site, 5);
-
+							chrome.storage.local.get('bfdShownSites', function(data) {
+							let bfdShownSites = data.bfdShownSites || [];
+							let index = bfdShownSites.indexOf(site);
+							if (index !== -1) {
+								bfdShownSites.splice(index, 1);
+								chrome.storage.local.set({ bfdShownSites: bfdShownSites }, function() {
+									console.log('Reset BFD for site:', site);
+								});
+							}
+						});
+	
 						chrome.tabs.query({}, function(tabs) {
 							tabs.forEach(function(tab) {
 								const blacklistURL = new URL(site).hostname;
-
+	
 								if (blacklistURL === new URL(tab.url).hostname) {
 									chrome.tabs.reload(tab.id);
 								}
 							});
 						});
-
+	
 						userInput.value = '';
 					});
 				} else {
@@ -77,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		}
 	});
-
+	
 	userInput.addEventListener('keypress', function(event) {
 		if (event.key === 'Enter') {
 			button.click();
