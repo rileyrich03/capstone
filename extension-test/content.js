@@ -1,3 +1,15 @@
+/**
+ * @file content.js
+ * @description Applies the main logic for each one of the distraction 
+ * injections that occur on blacklisted sites. It controls the timing 
+ * and amount of distraction injections that appear at once depending on
+ * intensity level, checks if the current site is blacklisted, then 
+ * initiates the injections. The injections so far include visual and 
+ * audio popups, automatically pausing videos, cursor changes, randomized 
+ * scrolling and zooming, and a forced warning cover screen (bfd).
+ * @author Joseph Curtin and Riley Richardson
+ * @date 12/11/2024 (Last modified)
+ */
 let loopInterval;
 let pauseInterval;
 let soundDistractions = false;
