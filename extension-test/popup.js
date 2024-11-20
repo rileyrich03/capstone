@@ -1,3 +1,13 @@
+/**
+ * @file popup.js
+ * @description Applies the logic for every interactable element of 
+ * the extension popup. It allows for the extension toggle, blacklist 
+ * additions, URL checking, distraction slider intensity changes, 
+ * automatic page refreshing, and further interactions with the 
+ * injections to all function correctly.
+ * @author Joseph Curtin and Riley Richardson
+ * @date 12/11/2024 (Last modified)
+ */
 document.addEventListener('DOMContentLoaded', function() {
 	let userInput = document.getElementById('userInput');
 	let button = document.getElementById('button');
@@ -140,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 	function makeli(site, inten) {
-		//grab blacklist for intensity editing and deleting 
+		//Grab blacklist for intensity editing and deleting 
 		let blackmap;
 		chrome.storage.local.get('blacklist', function(data) {
 			blackmap = new Map(data.blacklist);
