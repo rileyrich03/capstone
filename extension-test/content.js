@@ -56,11 +56,6 @@ function startDistractions() {
                     warningCursor();
                     bfd();
                     pauseVideo();
-                    blacklistLoop();
-
-                    if (!loopInterval) {
-                        loopInterval = setInterval(blacklistLoop, 1000);
-                    }
                 }
             });
         }
@@ -133,7 +128,7 @@ function bfd() {
             let site = 'https://' + window.location.hostname + '/';
 
             if (bfdShownSites.includes(site)) {
-                return;
+                //return;
             }
 
             if (!document.getElementById('bfd')) {
@@ -161,7 +156,7 @@ function bfd() {
                     bfd.remove();
                     blacklistLoop();
                     if (!loopInterval) {
-                        loopInterval = setInterval(blacklistLoop, 5000);
+                        loopInterval = setInterval(blacklistLoop, 11000 - (1000 * intensity));
                     }
 
                     bfdShownSites.push(site);
@@ -244,11 +239,13 @@ function blacklistLoop() {
             for (let i = 0; i < intensity; i += 3) {
                 miniFakeWindows();
             }
-
-            if (Math.random() > 0.5) {
+			//25% chance for scroll, 25%, and for zoom 50% nothing
+			chance = Math.random()
+            if (chance <= 0.25) {
                 setTimeout(randomZoom, 0); 
                 setTimeout(randomScroll, 1000);
-            } else {
+            } 
+			else if(chance >= 0.75) {
                 setTimeout(randomScroll, 0);
                 setTimeout(randomZoom, 1000);
             }
