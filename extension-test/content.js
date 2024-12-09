@@ -15,6 +15,7 @@ let pauseInterval;
 let soundDistractions = false;
 let distractionTimeouts = [];
 
+
 function isSiteBlacklisted(callback) {
     chrome.storage.local.get(['blacklist', 'toggleState'], function (data) {
         if (!(data.blacklist && data.toggleState === 'On'))
@@ -39,29 +40,38 @@ function getIntensity(callback) {
     });
 }
 
+let intenNotZero = false;
+getIntensity(function (intensity) {
+	intenNotZero = intensity != 0;
+});
+
 chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === 'local' && changes.blacklist) {
-        startDistractions();
+		getIntensity(function (intensity) {
+			if(intenWasZero && intensity != 0) {
+				startDistractions();
+			}
+			if(intensity == 0)
+				intenWasZero = True;
+			else
+				intenWasZero = False;
+		})
     }
 });
 
 function startDistractions() {
     isSiteBlacklisted(function (isBlacklisted) {
-        if (isBlacklisted) {
-            getIntensity(function (intensity) {
-                if (intensity == 0) {
-                    intensityOnZero();
-                } 
-                else {
-                    warningCursor();
-                    bfd();
-                    pauseVideo();
-                }
-            });
-        }
-        else {
-            intensityOnZero();
-        }
+		getIntensity(function (intensity) {
+        	if (!isBlacklisted || intensity == 0) {
+				intensityOnZero();
+				return;
+			}
+        	else {
+				warningCursor();
+				bfd();
+				pauseVideo();
+        	}
+		});
     });
 }
 
@@ -243,11 +253,11 @@ function blacklistLoop() {
 			chance = Math.random()
             if (chance <= 0.25) {
                 setTimeout(randomZoom, 0); 
-                setTimeout(randomScroll, 1000);
+                //setTimeout(randomScroll, 1000);
             } 
 			else if(chance >= 0.75) {
                 setTimeout(randomScroll, 0);
-                setTimeout(randomZoom, 1000);
+                //setTimeout(randomZoom, 1000);
             }
         });
     });
