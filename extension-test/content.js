@@ -20,7 +20,7 @@ function isSiteBlacklisted(callback) {
     chrome.storage.local.get(['blacklist', 'toggleState'], function (data) {
         if (!(data.blacklist && data.toggleState === 'On'))
             return callback(false);
-		
+
         let blackmap = new Map(data.blacklist);
         let site = 'https://' + window.location.hostname + '/';
         let isBlacklisted = blackmap.has(site);
@@ -48,7 +48,9 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 		intensityOnZero();
 		getIntensity(function (intensity) {
 			if(intensity != 0 && !loopInterval)
-            	loopInterval = setInterval(blacklistLoop, 11000 - (1000 * intensity));
+				pauseVideo();
+				loopInterval = setInterval(blacklistLoop, 11000 - (1000 * intensity));
+				setTimeout(warningCursor, 0);
 		});
     }
 });
@@ -79,15 +81,15 @@ function intensityOnZero() {
 	document.body.style.transform = 'scale(1)';
     
 	document.body.style.transformOrigin = 'center center';
-
+	//reset cursor
     document.documentElement.style.cursor = 'default';
     document.querySelectorAll('style[data-warning-cursor]').forEach(ellement => ellement.remove());
-
+	//clears blacklistloop interval
     if (loopInterval) {
         clearInterval(loopInterval);
         loopInterval = null;
     }
-
+	//clear pausevideo loop
     if (pauseInterval) {
         clearInterval(pauseInterval);
         pauseInterval = null;
@@ -297,6 +299,10 @@ function randomZoom() {
 }
 
 function pauseVideo() {
+	isSiteBlacklisted(function (isBlacklisted) {
+		if (!isBlacklisted)
+			return;
+	})
     getIntensity(function(intensity) {
         if (intensity == 0) return;
 
