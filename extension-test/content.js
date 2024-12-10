@@ -15,12 +15,12 @@ let pauseInterval;
 let soundDistractions = false;
 let distractionTimeouts = [];
 
-
+//Callback function used to retrieve if current site is blacklisted
 function isSiteBlacklisted(callback) {
     chrome.storage.local.get(['blacklist', 'toggleState'], function (data) {
         if (!(data.blacklist && data.toggleState === 'On'))
             return callback(false);
-
+		
         let blackmap = new Map(data.blacklist);
         let site = 'https://' + window.location.hostname + '/';
         let isBlacklisted = blackmap.has(site);
@@ -28,6 +28,7 @@ function isSiteBlacklisted(callback) {
     });
 }
 
+//Callback function used to retrieve intensit of current site
 function getIntensity(callback) {
     let site = 'https://' + window.location.hostname + '/';
     chrome.storage.local.get('blacklist', function (data) {
@@ -40,22 +41,15 @@ function getIntensity(callback) {
     });
 }
 
-let intenNotZero = false;
-getIntensity(function (intensity) {
-	intenNotZero = intensity != 0;
-});
-
+//if the intensity is zero then blacklistloop stopped and removed
+//if the intensity is not zero then blacklist loop is restarted
 chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === 'local' && changes.blacklist) {
+		intensityOnZero();
 		getIntensity(function (intensity) {
-			if(intenWasZero && intensity != 0) {
-				startDistractions();
-			}
-			if(intensity == 0)
-				intenWasZero = True;
-			else
-				intenWasZero = False;
-		})
+			if(intensity != 0 && !loopInterval)
+            	loopInterval = setInterval(blacklistLoop, 11000 - (1000 * intensity));
+		});
     }
 });
 
@@ -66,19 +60,25 @@ function startDistractions() {
 				intensityOnZero();
 				return;
 			}
-        	else {
-				warningCursor();
-				bfd();
-				pauseVideo();
-        	}
+			warningCursor();
+			//bfd contains the start of blacklist loop
+			bfd();
+			pauseVideo();			
 		});
     });
 }
 
+//used to reset the page removing blacklist loop and its effects
 function intensityOnZero() {
     document.body.style.zoom = '100%';
-    document.body.style.transform = 'scale(1)';
-    document.body.style.transformOrigin = 'center center';
+	//required to restore scrolling capabilities on some sites
+	document.documentElement.style.height = '100%';
+	document.documentElement.style.overflow = 'auto';
+	document.body.style.height = '100%';
+	document.body.style.overflow = 'auto';
+	document.body.style.transform = 'scale(1)';
+    
+	document.body.style.transformOrigin = 'center center';
 
     document.documentElement.style.cursor = 'default';
     document.querySelectorAll('style[data-warning-cursor]').forEach(ellement => ellement.remove());
@@ -104,8 +104,9 @@ function intensityOnZero() {
     distractionTimeouts = [];
 
     if (soundDistractions) {
-        document.removeEventListener('mouseover', soundChance);
-        document.removeEventListener('click', soundClick);
+        //soundChance soundClicks is not defined !!!!!!!
+		//document.removeEventListener('mouseover', soundChance);
+        //document.removeEventListener('click', soundClick);
         soundDistractions = false;
     }
 }
