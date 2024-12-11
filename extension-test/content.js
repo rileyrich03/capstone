@@ -15,6 +15,7 @@ let pauseInterval;
 let soundDistractions = false;
 let distractionTimeouts = [];
 
+//Callback function used to retrieve if current site is blacklisted
 function isSiteBlacklisted(callback) {
     chrome.storage.local.get(['blacklist', 'toggleState'], function (data) {
         if (!(data.blacklist && data.toggleState === 'On'))
@@ -27,6 +28,7 @@ function isSiteBlacklisted(callback) {
     });
 }
 
+//Callback function used to retrieve intensit of current site
 function getIntensity(callback) {
     let site = 'https://' + window.location.hostname + '/';
     chrome.storage.local.get('blacklist', function (data) {
@@ -39,50 +41,55 @@ function getIntensity(callback) {
     });
 }
 
+//if the intensity is zero then blacklistloop stopped and removed
+//if the intensity is not zero then blacklist loop is restarted
 chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === 'local' && changes.blacklist) {
-        startDistractions();
+		intensityOnZero();
+		getIntensity(function (intensity) {
+			if(intensity != 0 && !loopInterval)
+				pauseVideo();
+				loopInterval = setInterval(blacklistLoop, 11000 - (1000 * intensity));
+				setTimeout(warningCursor, 0);
+		});
     }
 });
 
 function startDistractions() {
     isSiteBlacklisted(function (isBlacklisted) {
-        if (isBlacklisted) {
-            getIntensity(function (intensity) {
-                if (intensity == 0) {
-                    intensityOnZero();
-                } 
-                else {
-                    warningCursor();
-                    bfd();
-                    pauseVideo();
-                    blacklistLoop();
-
-                    if (!loopInterval) {
-                        loopInterval = setInterval(blacklistLoop, 1000);
-                    }
-                }
-            });
-        }
-        else {
-            intensityOnZero();
-        }
+		getIntensity(function (intensity) {
+        	if (!isBlacklisted || intensity == 0) {
+				intensityOnZero();
+				return;
+			}
+			warningCursor();
+			//bfd contains the start of blacklist loop
+			bfd();
+			pauseVideo();			
+		});
     });
 }
 
+//used to reset the page removing blacklist loop and its effects
 function intensityOnZero() {
     document.body.style.zoom = '100%';
-    document.body.style.transform = 'scale(1)';
-    document.body.style.transformOrigin = 'center center';
-
+	//required to restore scrolling capabilities on some sites
+	document.documentElement.style.height = '100%';
+	document.documentElement.style.overflow = 'auto';
+	document.body.style.height = '100%';
+	document.body.style.overflow = 'auto';
+	document.body.style.transform = 'scale(1)';
+    
+	document.body.style.transformOrigin = 'center center';
+	//reset cursor
     document.documentElement.style.cursor = 'default';
     document.querySelectorAll('style[data-warning-cursor]').forEach(ellement => ellement.remove());
-
+	//clears blacklistloop interval
     if (loopInterval) {
         clearInterval(loopInterval);
         loopInterval = null;
     }
-
+	//clear pausevideo loop
     if (pauseInterval) {
         clearInterval(pauseInterval);
         pauseInterval = null;
@@ -99,8 +106,9 @@ function intensityOnZero() {
     distractionTimeouts = [];
 
     if (soundDistractions) {
-        document.removeEventListener('mouseover', soundChance);
-        document.removeEventListener('click', soundClick);
+        //soundChance soundClicks is not defined !!!!!!!
+		//document.removeEventListener('mouseover', soundChance);
+        //document.removeEventListener('click', soundClick);
         soundDistractions = false;
     }
 }
@@ -133,7 +141,7 @@ function bfd() {
             let site = 'https://' + window.location.hostname + '/';
 
             if (bfdShownSites.includes(site)) {
-                return;
+                //return;
             }
 
             if (!document.getElementById('bfd')) {
@@ -161,7 +169,7 @@ function bfd() {
                     bfd.remove();
                     blacklistLoop();
                     if (!loopInterval) {
-                        loopInterval = setInterval(blacklistLoop, 5000);
+                        loopInterval = setInterval(blacklistLoop, 11000 - (1000 * intensity));
                     }
 
                     bfdShownSites.push(site);
@@ -244,13 +252,15 @@ function blacklistLoop() {
             for (let i = 0; i < intensity; i += 3) {
                 miniFakeWindows();
             }
-
-            if (Math.random() > 0.5) {
+			//25% chance for scroll, 25%, and for zoom 50% nothing
+			chance = Math.random()
+            if (chance <= 0.25) {
                 setTimeout(randomZoom, 0); 
-                setTimeout(randomScroll, 1000);
-            } else {
+                //setTimeout(randomScroll, 1000);
+            } 
+			else if(chance >= 0.75) {
                 setTimeout(randomScroll, 0);
-                setTimeout(randomZoom, 1000);
+                //setTimeout(randomZoom, 1000);
             }
         });
     });
@@ -289,6 +299,10 @@ function randomZoom() {
 }
 
 function pauseVideo() {
+	isSiteBlacklisted(function (isBlacklisted) {
+		if (!isBlacklisted)
+			return;
+	})
     getIntensity(function(intensity) {
         if (intensity == 0) return;
 
